@@ -1,5 +1,5 @@
 {
-    "name": "vendor/azuread",
+    "name": "maticorena/azuread",
     "description": "Easy connection on Azure Active Directory",
     "type": "library",
     "license": "MIT",
