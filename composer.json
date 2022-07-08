@@ -1,0 +1,17 @@
+{
+    "name": "vendor/azuread",
+    "description": "Easy connection on Azure Active Directory",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cmaticorenaa",
+            "email": "cmaticorenaa@atento.com.pe"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "microsoft/microsoft-graph": "^1.71",
+        "vlucas/phpdotenv": "^5.4"
+    }
+}
