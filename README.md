@@ -1,2 +1,2 @@
 # azuread
-Easy conection on Azure Active Directory
+Easy connection on Azure Active Directory
