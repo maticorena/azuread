@@ -1,4 +1,5 @@
 <?php
+namespace Maticorena\AzureAD;
 
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
