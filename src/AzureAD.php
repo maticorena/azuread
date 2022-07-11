@@ -3,6 +3,7 @@ namespace Maticorena\AzureAD;
 
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use Dotenv;
 
 class AzureAD {
 
