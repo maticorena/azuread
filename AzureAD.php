@@ -14,7 +14,7 @@ class AzureAD {
   }
 
   public function authorize(){
-    $url = "https://login.microsoftonline.com/" . $_ENV['tenantId'] . "/oauth2/v2.0/authorize?";
+    $url = $_ENV['service'] . $_ENV['tenantId'] . "/oauth2/v2.0/authorize?";
     $url .= "state=" . session_id();
     $url .= "&scope=".$_ENV['scope'];
     $url .= "&response_type=code";
@@ -26,7 +26,7 @@ class AzureAD {
 
   public function token($code){
     $guzzle = new \GuzzleHttp\Client();
-    $url = 'https://login.microsoftonline.com/' . $_ENV['tenantId'] . '/oauth2/v2.0/token';
+    $url = $_ENV['service']. $_ENV['tenantId'] . '/oauth2/v2.0/token';
     $token = json_decode($guzzle->post($url, [
         'form_params' => [
             'client_id' => $_ENV['clientId'],
@@ -42,7 +42,7 @@ class AzureAD {
 
   public function refreshToken($refresh_token){
     $guzzle = new \GuzzleHttp\Client();
-    $url = 'https://login.microsoftonline.com/' . $_ENV['tenantId'] . '/oauth2/v2.0/token';
+    $url = $_ENV['service'] . $_ENV['tenantId'] . '/oauth2/v2.0/token';
     $token = json_decode($guzzle->post($url, [
         'form_params' => [
             'client_id' => $_ENV['clientId'],
@@ -66,7 +66,7 @@ class AzureAD {
   }
 
   public function logout(){
-    $url = "https://login.microsoftonline.com/" . $_ENV['tenantId'] . "/oauth2/v2.0/logout?";
+    $url = $_ENV['service']. $_ENV['tenantId'] . "/oauth2/v2.0/logout?";
     $url .= "post_logout_redirect_uri=" .  $_ENV['redirectUri'];
     header("Location: " . $url);
   }
