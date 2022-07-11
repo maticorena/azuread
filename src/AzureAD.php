@@ -10,7 +10,7 @@ class AzureAD {
   public function __construct(){
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
-    $dotenv->required(['clientId', 'clientSecret', 'tenantId', 'scope','service']);
+    $dotenv->required(['clientId', 'clientSecret', 'tenantId', 'scope','service','required','lanzador']);
   }
 
   public function authorize(){
@@ -69,6 +69,17 @@ class AzureAD {
     $url = $_ENV['service']. $_ENV['tenantId'] . "/oauth2/v2.0/logout?";
     $url .= "post_logout_redirect_uri=" .  $_ENV['redirectUri'];
     header("Location: " . $url);
+  }
+
+  public function required(){
+    $comprobar=$_ENV['required'];
+    foreach($comprobar as $indice=>$name){
+      if(!isset($_COOKIE[$name]) && !isset($_POST[$name])){
+          header('Location: '.$_ENV['lanzador']);exit;
+      }
+      $value=(isset($_POST[$name]))?$_POST[$name]:$_COOKIE[$name];
+      setcookie($name, $value,-1,"/");
+    }
   }
 
 }
