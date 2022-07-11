@@ -1,4 +1,5 @@
 <?php
+session_start();
 namespace Maticorena\AzureAD;
 
 use Microsoft\Graph\Graph;
@@ -79,6 +80,25 @@ class AzureAD {
       }
       $value=(isset($_POST[$name]))?$_POST[$name]:$_COOKIE[$name];
       setcookie($name, $value,-1,"/");
+    }
+  }
+
+  public function saveToken($token){
+    $time=time();
+    $token->create_in=$time;
+    $token->expires_time=$time+$token->expires_in;
+    $_SESSION['azuread']=$token;
+  }
+
+  public function tokenValid(){
+    $time=time();
+    if(isset($_SESSION['azuread'])){
+      if($time<$_SESSION['azuread']->expires_time)
+          return true;
+      else
+          return false;
+    }else{
+      return false;
     }
   }
 
