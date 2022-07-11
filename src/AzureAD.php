@@ -72,7 +72,7 @@ class AzureAD {
   }
 
   public function required(){
-    $comprobar=$_ENV['required'];
+    $comprobar=explode(' ',$_ENV['required']);
     foreach($comprobar as $indice=>$name){
       if(!isset($_COOKIE[$name]) && !isset($_POST[$name])){
           header('Location: '.$_ENV['lanzador']);exit;
