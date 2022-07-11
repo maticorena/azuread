@@ -102,4 +102,8 @@ class AzureAD {
     }
   }
 
+  public function getSavedToken(){
+    return (isset($_SESSION['azuread']))?$_SESSION['azuread']:false;
+  }
+
 }
