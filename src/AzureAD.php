@@ -3,13 +3,14 @@ namespace Maticorena\AzureAD;
 
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use Dotenv\Dotenv;
 
 class AzureAD {
 
   public function __construct(){
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
-    $dotenv->required(['clientId', 'clientSecret', 'tenantId', 'scope']);
+    $dotenv->required(['clientId', 'clientSecret', 'tenantId', 'scope','service']);
   }
 
   public function authorize(){
