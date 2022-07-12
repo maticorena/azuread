@@ -8,12 +8,19 @@ use Dotenv;
 
 class AzureAD {
 
+/**
+ * It loads the .env file and checks that the required variables are set
+ */
   public function __construct(){
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
     $dotenv->required(['clientId', 'clientSecret', 'tenantId', 'scope','service','required','lanzador']);
   }
 
+/**
+ * It builds a URL to the Microsoft Graph API's authorization endpoint, and then redirects the user to
+ * that URL
+ */
   public function authorize(){
     $url = $_ENV['service'] . $_ENV['tenantId'] . "/oauth2/v2.0/authorize?";
     $url .= "state=" . session_id();
@@ -25,6 +32,14 @@ class AzureAD {
     header("Location: " . $url);
   }
 
+/**
+ * It takes the authorization code from the previous step and uses it to request an access token from
+ * the Microsoft Graph API
+ * 
+ * @param code The authorization code returned from the initial request to Azure.
+ * 
+ * @return The token is being returned.
+ */
   public function token($code){
     $guzzle = new \GuzzleHttp\Client();
     $url = $_ENV['service']. $_ENV['tenantId'] . '/oauth2/v2.0/token';
@@ -41,6 +56,13 @@ class AzureAD {
     return $token;
   }
 
+/**
+ * It takes a refresh token and returns a new access token
+ * 
+ * @param refresh_token The refresh token that was returned from the initial authorization request.
+ * 
+ * @return The token is being returned.
+ */
   public function refreshToken($refresh_token){
     $guzzle = new \GuzzleHttp\Client();
     $url = $_ENV['service'] . $_ENV['tenantId'] . '/oauth2/v2.0/token';
@@ -57,6 +79,14 @@ class AzureAD {
     return $token;
   }
 
+/**
+ * It takes a token, creates a new Graph object, sets the token, creates a new request, sets the return
+ * type, and executes the request
+ * 
+ * @param token The access token you got from the login process
+ * 
+ * @return An object of type User. and his properties
+ */
   public static function me($token){
     $graph = new Graph();
     $graph->setAccessToken($token);
@@ -66,12 +96,19 @@ class AzureAD {
     return $user;
   }
 
+/**
+ * It takes the user to the Azure AD logout page, and then redirects them back to the application
+ */
   public function logout(){
+    if(isset($_SESSION['azuread']))unset($_SESSION['azuread']);
     $url = $_ENV['service']. $_ENV['tenantId'] . "/oauth2/v2.0/logout?";
     $url .= "post_logout_redirect_uri=" .  $_ENV['redirectUri'];
     header("Location: " . $url);
   }
 
+/**
+ * If the user has not sent the required data, redirect to the launcher
+ */
   public function required(){
     $comprobar=explode(' ',$_ENV['required']);
     foreach($comprobar as $indice=>$name){
@@ -83,6 +120,11 @@ class AzureAD {
     }
   }
 
+/**
+ * It saves the token in the session
+ * 
+ * @param token The token object returned from the Azure AD server.
+ */
   public function saveToken($token){
     $time=time();
     $token->create_in=$time;
@@ -90,6 +132,12 @@ class AzureAD {
     $_SESSION['azuread']=$token;
   }
 
+/**
+ * If the session variable is set and the current time is less than the expiration time, return true.
+ * Otherwise, return false
+ * 
+ * @return A boolean value.
+ */
   public function tokenValid(){
     $time=time();
     if(isset($_SESSION['azuread'])){
@@ -102,6 +150,12 @@ class AzureAD {
     }
   }
 
+/**
+ * It checks if the session variable 'azuread' is set. If it is, it returns the value of the session
+ * variable. If it is not set, it returns false.
+ * 
+ * @return The token is being returned.
+ */
   public function getSavedToken(){
     return (isset($_SESSION['azuread']))?$_SESSION['azuread']:false;
   }
