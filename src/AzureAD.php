@@ -64,6 +64,7 @@ class AzureAD {
  * @return The token is being returned.
  */
   public function refreshToken($refresh_token){
+    $this->limitRefresh();
     $guzzle = new \GuzzleHttp\Client();
     $url = $_ENV['service'] . $_ENV['tenantId'] . '/oauth2/v2.0/token';
     $token = json_decode($guzzle->post($url, [
@@ -77,6 +78,16 @@ class AzureAD {
         ],
     ])->getBody()->getContents());
     return $token;
+  }
+
+  private function limitRefresh(){
+    $time=time();
+    $token=$this->getSavedToken();
+    if($token!=false){
+       if($time > $token->create_in+(int)$_ENV['limitRefresh']){
+           $this->logout();exit;
+       }
+    }
   }
 
 /**
