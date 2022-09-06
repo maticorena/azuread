@@ -95,10 +95,26 @@ class AzureAD {
  * type, and executes the request
  * 
  * @param token The access token you got from the login process
+ * @param attribute The attribute that you want get
+ * @return An object of type User. and his properties
+ */
+  public static function me($token,$attribute){
+    $graph = new Graph();
+    $graph->setAccessToken($token);
+    $user = $graph->createRequest("GET", "/me?\$select=".$attribute)
+                ->setReturnType(Model\User::class)
+                ->execute();
+    return $user;
+  }
+/**
+ * It takes a token, creates a new Graph object, sets the token, creates a new request, sets the return
+ * type, and executes the request
+ * 
+ * @param token The access token you got from the login process
  * 
  * @return An object of type User. and his properties
  */
-  public static function me($token){
+  public static function meBasic($token){
     $graph = new Graph();
     $graph->setAccessToken($token);
     $user = $graph->createRequest("GET", "/me")
